@@ -363,7 +363,7 @@ void init()
 	VDP_FillVRAM_16K( 255, 0x1400, 32 * 24 );
 }
 
-void buildFrame( u16 f )
+void buildFrame( u8 f )
 {
 	// set color map
 	if (f < 2)
@@ -381,7 +381,7 @@ void buildFrame( u16 f )
 	u16* uni = unique + offset[f];
 	const u8 unis = offset[f + 1] - offset[f];
 	pile[0] = base, pile[1] = base + 24, pile[2] = base + 48, pile[3] = base + 72, pile[4] = base + 96, pile[5] = base + 112;
-	for (i8 i = 0; i < unis; i++)
+	for (u8 i = 0; i < unis; i++)
 	{
 		const u16 tileIdx = uni[i];
 		const u8 c = pile[tileIdx & 7]++;
@@ -401,34 +401,18 @@ void buildFrame( u16 f )
 		line16[5] = cidx[frame[idx + 10]] + (cidx[frame[idx + 11]] << 8);
 	}
 	// final precalculations
-	const u16 sprtiles = sproff[f + 1] - sproff[f];
-	line16 = lbuf, o = 0x540A + (6 << 5);
+	const u8 sprtiles = sproff[f + 1] - sproff[f];
 	// ^^^ ======================= ABOVE THIS LINE: STUFF THAT ISN'T IMMEDIATELY VISIBLE
 	waitvsync();
 	// vvv ======================= BELOW THIS LINE: STUFF THAT CHANGES THE DISPLAY
 	// write sprite patterns
-	for( i16 i = 0; i < sprtiles; i++ )
+	for( u8 i = 0; i < sprtiles; i++ )
 	{
 		VDP_WriteVRAM_16K_8( sprpat + ((sproff[f] + i) << 3), 0x4000 + (i << 3) );
 		VDP_WriteVRAM_16K_4( spratr + ((sproff[f] + i) << 2), 0x5000 + (i << 2) );
 	}
 	// build character image
-#if 1
-	VDP_WriteVRAM_16K_12x12( line16 ); 
-#else
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o ); o += 32, line16 += 6;
-	VDP_WriteVRAM_16K_12( line16, o );
-#endif
+	VDP_WriteVRAM_16K_12x12( lbuf ); 
 	// clear unused sprites, if any
 	if (prevCount > sprtiles)
 	{
@@ -438,12 +422,9 @@ void buildFrame( u16 f )
 	//     ======================= AT THIS POINT: DRAWING TO DISPLAY HAS COMPLETED
 	prevCount = sprtiles;
 	// flip red/green for second half of cycle
-	if (sprtiles > 0)
-	{
-		u8* a = spratr + (sproff[f] << 2) + 3;
-		for (i16 i = 0; i < sprtiles; i++, a += 4) if (*a == 8) *a = 2; else if (*a == 2) *a = 8;
-	}
-	base += 128;
+	u8* a = spratr + (sproff[f] << 2) + 3;
+	for (u8 i = 0; i < sprtiles; i++, a += 4) if (*a == 8) *a = 2; else if (*a == 2) *a = 8;
+	base ^= 128;
 }
 
 void main()
