@@ -92,14 +92,14 @@ void buildFrame( u8 f )
 	// ^^^ ======================= ABOVE THIS LINE: STUFF THAT ISN'T IMMEDIATELY VISIBLE
 	waitvsync();
 	// vvv ======================= BELOW THIS LINE: STUFF THAT CHANGES THE DISPLAY
-	// write sprite patterns
-	for( u8 i = 0; i < sprtiles; i++ )
-	{
-		VDP_WriteVRAM_16K_8( sprpat + ((sproff[f] + i) << 3), 0x4000 + (i << 3) );
-		VDP_WriteVRAM_16K_4( spratr + ((sproff[f] + i) << 2), 0x5000 + (i << 2) );
-	}
 	// build character image
 	VDP_WriteVRAM_16K_12x12( lbuf ); 
+	// write sprite patterns
+	for (u8 i = 0; i < sprtiles; i++)
+	{
+		VDP_WriteVRAM_16K_4( spratr + ((sproff[f] + i) << 2), 0x5000 + (i << 2) );
+		VDP_WriteVRAM_16K_8( sprpat + ((sproff[f] + i) << 3), 0x4000 + (i << 3) );
+	}
 	// clear unused sprites, if any
 	if (prevCount > sprtiles)
 	{

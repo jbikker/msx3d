@@ -1,42 +1,29 @@
-void VDP_WriteVRAM_16K_4( const u8* src, u16 dest ) __sdcccall( 0 )
+void VDP_WriteVRAM_16K_4( const u8* src, u16 dest )
 {
-	src, dest;
 	__asm
-		push	ix
-		ld		ix, #0
-		add		ix, sp
-		ld		a, 6(ix)
+		ld		a, e
 		di
 		out( 0x99 ), a
-		ld		a, 7(ix)
+		ld		a, d
 		ei
 		out( 0x99 ), a
-		ld		l, 4(ix)
-		ld		h, 5(ix)
 		ld		c, #0x98
 		outi
 		outi
 		outi
 		outi
-		pop		ix
 	__endasm;
 }
 
-void VDP_WriteVRAM_16K_8( const u8* src, u16 dest ) __sdcccall( 0 )
+void VDP_WriteVRAM_16K_8( const u8* src, u16 dest )
 {
-	src, dest;
 	__asm
-		push	ix
-		ld		ix, #0
-		add		ix, sp
-		ld		a, 6(ix)
+		ld		a, e
 		di
 		out( 0x99 ), a
-		ld		a, 7(ix)
+		ld		a, d
 		ei
 		out( 0x99 ), a
-		ld		l, 4(ix)
-		ld		h, 5(ix)
 		ld		c, #0x98
 		outi
 		outi
@@ -46,25 +33,19 @@ void VDP_WriteVRAM_16K_8( const u8* src, u16 dest ) __sdcccall( 0 )
 		outi
 		outi
 		outi
-		pop		ix
 	__endasm;
 }
 
-void VDP_WriteVRAM_16K_12( const u8* src, u16 dest ) __sdcccall( 0 )
+void VDP_WriteVRAM_16K_12( const u8* src, u16 dest )
 {
 	src, dest;
 	__asm
-		push	ix
-		ld		ix, #0
-		add		ix, sp
-		ld		a, 6(ix)
+		ld		a, e
 		di
 		out( 0x99 ), a
-		ld		a, 7(ix)
+		ld		a, d
 		ei
 		out( 0x99 ), a
-		ld		l, 4(ix)
-		ld		h, 5(ix)
 		ld		c, #0x98
 		outi
 		outi
@@ -78,25 +59,18 @@ void VDP_WriteVRAM_16K_12( const u8* src, u16 dest ) __sdcccall( 0 )
 		outi
 		outi
 		outi
-		pop		ix
 	__endasm;
 }
 
-void VDP_WriteVRAM_16K_12x12( const u8* src ) __sdcccall( 0 )
+void VDP_WriteVRAM_16K_12x12( const u8* src )
 {
-	src; // , dest = 0x54CA;
 	__asm
-	push	ix
-		ld		ix, #0
-		add		ix, sp
 		ld		a, #0xCA
 		di
 		out( 0x99 ), a
 		ld		a, #0x54
 		ei
 		out( 0x99 ), a
-		ld		l, 4(ix)
-		ld		h, 5(ix)
 		ld		c, #0x98
 		outi
 		outi
@@ -308,6 +282,5 @@ void VDP_WriteVRAM_16K_12x12( const u8* src ) __sdcccall( 0 )
 		outi
 		outi
 		outi
-		pop		ix
-		__endasm;
+	__endasm;
 }
